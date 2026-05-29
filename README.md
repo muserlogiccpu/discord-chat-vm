@@ -38,7 +38,7 @@ Then edit config.json
 And run the script.
 
 # NOTICE from the original owner:
-i may or may not turn this to LUA soon. i know lua more.
+i may or may not turn this to lua soon. i know lua more.
 
 # Credits:
 Credits to jimhasaburger for the YouTube version (including scancodes)
