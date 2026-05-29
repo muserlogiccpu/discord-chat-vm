@@ -11,28 +11,32 @@ of course. use pull requests.
 # setup
 get virtualbox. 
 you will need to run these (idk which needed!):
-```
+```batch
 pip install pyvbox
 pip install pyvirtualbox
 pip install virtualbox
 ```
 or run these
-```
+```bash
 py -m pip install pyvbox
 py -m pip install pyvirtualbox
 py -m pip install virtualbox
 ```
 If you have a debian based distro, do this first:
-```
+```bash
 python -m venv .venv
 source .venv/bin/activate
 ```
 If you don't have pip, then do this:
-```
+```bash
 curl -o "get-pip.py" "https://bootstrap.pypa.io/get-pip.py"
 python ./get-pyp.py
 ```
-
+Batch:
+```batch
+curl -o "get-pip.py" "https://bootstrap.pypa.io/get-pip.py"
+python get-pyp.py
+```
 **If you don't have python, then install it from your package manager.**
 Then edit config.json
 And run the script.
