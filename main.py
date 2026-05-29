@@ -127,7 +127,15 @@ async def rebertical(ctx):
     await ctx.send("Initiating VM revert...")
     await asyncio.to_thread(revert_vm)
     await ctx.send("VM reverted and ready.")
-    
+@bot.command()
+async def wait(ctx, seconds: int):
+    if seconds > 30:
+        await ctx.send("I can only wait for up to 30 seconds to keep the event loop healthy.")
+        return
+    await ctx.send(f"Waiting for {seconds} seconds...")
+    await asyncio.sleep(seconds)
+    await ctx.send("Resuming!")
+
 @bot.command()
 async def click(ctx, btn: str = "left"):
     btns = {"left": 1, "right": 2, "middle": 4}
