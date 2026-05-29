@@ -5,6 +5,7 @@ import json
 import asyncio
 import time
 import uuid
+import subprocess
 
 # config & vm setup
 with open('config.json', 'r') as g:
@@ -69,6 +70,29 @@ def click_mouse(type):
 def scroll_mouse(num):
     session.console.mouse.put_mouse_event(dx=0, dy=0, dz=num, dw=0, button_state=0)
 
+def revert_vm():
+    global session
+    try:
+        if session.state == virtualbox.library.SessionState.locked:
+            session.unlock_machine()
+            
+        print("Shutting down VM for revert...")
+        subprocess.run(['VBoxManage', 'controlvm', VM_NAME, 'poweroff'], check=True, capture_output=True)
+        
+        print(f"Reverting '{VM_NAME}' to latest snapshot...")
+        subprocess.run(['VBoxManage', 'snapshot', VM_NAME, 'restorecurrent'], check=True, capture_output=True)
+        
+        add_sys_message("Reverted to latest snapshot successfully!")
+        
+        machine = vbox.find_machine(VM_NAME)
+        machine.lock_machine(session, virtualbox.library.LockType.shared)
+        
+    except subprocess.CalledProcessError as e:
+        print(f"VBoxManage error: {e.stderr.decode().strip()}")
+        add_sys_message("Revert failed due to VBoxManage error.")
+    except Exception as e:
+        print(f"Error reverting: {e}")
+        add_sys_message("Revert failed.")
 # dc commands (async)
 @bot.event
 async def on_ready():
@@ -98,6 +122,12 @@ async def move(ctx, x: int, y: int):
     await asyncio.to_thread(move_mouse, x, y)
     await ctx.send(f"Moved mouse to {x}, {y}")
 
+@bot.command()
+async def rebertical(ctx):
+    await ctx.send("Initiating VM revert...")
+    await asyncio.to_thread(revert_vm)
+    await ctx.send("VM reverted and ready.")
+    
 @bot.command()
 async def click(ctx, btn: str = "left"):
     btns = {"left": 1, "right": 2, "middle": 4}
